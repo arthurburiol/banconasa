@@ -1,0 +1,38 @@
+body {
+    padding-top: 70px;
+    background-color: rgb(171, 199, 240); 
+}
+
+.navbar {
+    background-color: rgb(11, 60, 145);
+}
+
+.offcanvas-header {
+    background-color: rgb(11, 60, 145);
+}
+
+.offcanvas-title {
+    color: white;
+}
+
+.offcanvas-body {
+    background-color: rgb(171, 199, 240);
+}
+
+.container {
+    margin-top: 5px;
+}
+
+h2 {
+    font-family: monospace;
+}
+
+p {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.footer {
+    background-color: rgb(42, 42, 42);
+    color: white;
+    padding: 4px 0;
+}

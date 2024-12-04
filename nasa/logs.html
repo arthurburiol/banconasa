@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Logs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav class="navbar fixed-top">
+        <div class="container-fluid">
+            <img src="images/logo.png" alt="" style="width: 60px; height: auto;">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">NASA</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Asteroides</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="banco.html">Banco de Dados</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="logs.html">Logs</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2>Registro de Logs</h2>
+        <button class="btn btn-primary" onclick="fetchLogs()">Mostrar Logs</button>
+        <div id="logList" class="mt-3"></div>
+    </div>
+
+    <script>
+        const matricula = "414271";
+
+        async function fetchLogs() {
+            const urlLogs = `https://www.piway.com.br/unoesc/api/logs/${matricula}`;
+            try {
+                const response = await fetch(urlLogs);
+                if (!response.ok) {
+                    throw new Error('Matrícula do aluno é inválida.');
+                }
+                const logs = await response.json();
+                displayLogs(logs);
+            } catch (error) {
+                alert('Erro: ' + error.message);
+            }
+        }
+
+        function displayLogs(logs) {
+            const logList = document.getElementById('logList');
+            logList.innerHTML = '';
+
+            if (logs.length === 0) {
+                logList.innerHTML = '<div class="alert alert-info">Nenhum log encontrado.</div>';
+                return;
+            }
+
+            logs.forEach(log => {
+                const logElement = document.createElement('div');
+                logElement.className = 'log-entry d-flex justify-content-between align-items-center mb-2';
+                logElement.innerHTML = `
+                    <div class="card">
+                            <div class="card-body">
+                                    ID: ${log.idlog}<br>
+                                    Data: ${log.log}<br>
+                                    API: ${log.api}<br>
+                                    Método: ${log.metodo}<br>
+                                    Resultado: ${log.resultado}<br>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteLog('${log.idlog}')">Excluir</button>
+                            </div>
+                    </div>`;
+                logList.appendChild(logElement);
+            });
+        }
+
+        async function deleteLog(idLog) {
+            const urlDeleteLog = await fetch(`https://www.piway.com.br/unoesc/api/excluir/log/${idLog}/aluno/${matricula}`);
+                fetchLogs();
+           }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
